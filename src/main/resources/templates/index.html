@@ -3,31 +3,50 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="/layout/main.html">
 <div layout:fragment="productsContent" class="mb-2">
     <div class="row row-cols-1 row-cols-md-2 g-4">
-        <div class="col" th:each="requests : ${ allRequests}">
-            <div class="card">
-                <div class="card-body">
-                    <div class="">
-                        <span th:if="${requests.handled!=true}" class="">
-                            <span class="text-danger fw-bolder">*(Новая)</span>
-                        </span>
-                        <span class="fw-bold"><label>Заявка от: </label>
-                            <span class="fw-bolder" th:text="${requests.userName}"></span>
-                        </span>
-                    </div>
+        <div class="row">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn col-sm-3" data-bs-toggle="modal" data-bs-target="#newFolder">
+                + New Folder
+            </button>
 
-                    <br>
-                    <h5><label>Курс: </label>
-                        <span th:text="${requests.courseName.name}"></span>
-                    </h5>
-                    <br>
-                    <p><span th:text="${requests.commentary}"></span>
-                    </p>
-                    <br>
-                    <p class="fw-bold"><label for="">Тел:</label><span th:text="${requests.phone}" class="fw-bolder"></span>
-                        <a class="text-decoration-none" th:href="@{'/details/' + ${requests.id}}"> Подробнее
-                        </a>
-                    </p>
-                    <br>
+            <!-- Modal -->
+            <div class="modal fade" id="newFolder" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form th:action="@{'/newFolder'}" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">ADD NEW FOLDER</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="form-control">Folder name</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <input class="form-control" type="text" name="name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button class="btn btn-primary">ADD</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 container-fluid mb-3">
+                <div class="card w-100 mb-3" th:each="folder : ${folders}">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${folder.name}"></h5>
+                        <a th:href="@{'/details/folders/' + ${folder.id}}" class="btn btn-primary">Details</a>
+                    </div>
+<!--                    <div class="card-footer text-muted">-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>
