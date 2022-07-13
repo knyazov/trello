@@ -19,6 +19,6 @@ public class Folders {
 
     private String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<TaskCategories> categories;
 }

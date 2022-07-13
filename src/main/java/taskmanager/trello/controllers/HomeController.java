@@ -3,10 +3,9 @@ package taskmanager.trello.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import taskmanager.trello.entities.Folders;
+import taskmanager.trello.entities.TaskCategories;
 import taskmanager.trello.repositories.FoldersRepository;
 import taskmanager.trello.services.TaskServices;
 
@@ -25,5 +24,20 @@ public class HomeController {
     private String newFolder(@ModelAttribute(name = "folderObj")Folders folderObj){
         taskServices.addFolder(folderObj);
         return "redirect:/";
+    }
+
+    @GetMapping(value = "/details/folders/{id}")
+    private String detailsFolders(@PathVariable(name = "id") Long folderId,
+                                  Model model){
+        model.addAttribute("folder", taskServices.getFolder(folderId));
+        model.addAttribute("categories", taskServices.getAllCategories());
+        return "detailsFolder";
+    }
+
+    @PostMapping(value = "/assignCategory")
+    private String assignCategory(@RequestParam(name = "id") Long folderId,
+                                  @ModelAttribute(name = "catObj")TaskCategories category){
+        taskServices.assignCategory(folderId, category.getId());
+        return "redirect:/details/folders/"+folderId;
     }
 }
