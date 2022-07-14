@@ -35,9 +35,9 @@ public class HomeController {
     }
 
     @PostMapping(value = "/assignCategory")
-    private String assignCategory(@RequestParam(name = "id") Long folderId,
-                                  @ModelAttribute(name = "catObj")TaskCategories category){
-        taskServices.assignCategory(folderId, category.getId());
+    private String assignCategory(@RequestParam(name = "folderId") Long folderId,
+                                  @RequestParam(name = "categoryId") Long categoryId){
+        taskServices.assignCategory(folderId, categoryId);
         return "redirect:/details/folders/"+folderId;
     }
 }
