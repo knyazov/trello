@@ -8,4 +8,5 @@ import taskmanager.trello.entities.Comments;
 @Repository
 @Transactional
 public interface CommentsRepository extends JpaRepository<Comments, Long> {
+    Comments findCommentsByTaskId(Long taskid);
 }

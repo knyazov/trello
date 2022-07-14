@@ -1,6 +1,7 @@
 package taskmanager.trello.services;
 
 
+import taskmanager.trello.entities.Comments;
 import taskmanager.trello.entities.Folders;
 import taskmanager.trello.entities.TaskCategories;
 import taskmanager.trello.entities.Tasks;
@@ -17,4 +18,9 @@ public interface TaskServices {
     void assignCategory(Long folderId, Long categoryId);
     void addTask(Long folderId, Tasks task);
     void deleteCat(Long folderId, Long catId);
+    Tasks getTask(Long taskId);
+    void addComment(Long taskId, String comment, Long commentId);
+    void updateTask(Long taskId, Tasks task);
+    void deleteTask(Long taskId);
+    Comments getComment(Long taskId);
 }
