@@ -50,8 +50,8 @@ public class HomeController {
         return "redirect:/details/folders/"+folderId;
     }
 
-    @GetMapping(value = "/unAssignCat/{catId}/{folderId}")
-    private String unAssignCategory(@PathVariable(name = "catId") Long catId,
+    @PostMapping(value = "/unAssignCat")
+    private String unAssignCategory(@RequestParam(name = "catId") Long catId,
                                     @RequestParam(name = "folderId") Long folderId){
         taskServices.deleteCat(folderId, catId);
         return "redirect:/details/folders/"+folderId;
