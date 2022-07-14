@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import taskmanager.trello.entities.Folders;
 import taskmanager.trello.entities.TaskCategories;
+import taskmanager.trello.entities.Tasks;
 import taskmanager.trello.repositories.FoldersRepository;
 import taskmanager.trello.repositories.TaskCategoriesRepository;
+import taskmanager.trello.repositories.TasksRepository;
 import taskmanager.trello.services.TaskServices;
 
 import java.util.ArrayList;
@@ -18,6 +20,9 @@ public class ServicesImpl implements TaskServices {
 
     @Autowired
     private TaskCategoriesRepository categoriesRepository;
+
+    @Autowired
+    private TasksRepository tasksRepository;
 
     @Override
     public void addFolder(Folders folder) {
@@ -35,6 +40,16 @@ public class ServicesImpl implements TaskServices {
     }
 
     @Override
+    public List<Tasks> getAllTasks() {
+        return tasksRepository.findAll();
+    }
+
+    @Override
+    public List<Tasks> getTasksByFolderId(Long folderId) {
+        return tasksRepository.findTasksByFolderId(folderId);
+    }
+
+    @Override
     public Folders getFolder(Long id) {
         return foldersRepository.findById(id).orElse(null);
     }
@@ -49,6 +64,30 @@ public class ServicesImpl implements TaskServices {
             }
             TaskCategories category = categoriesRepository.findById(categoryId).orElse(null);
             categories.add(category);
+            folder.setCategories(categories);
+            addFolder(folder);
+        }
+    }
+
+    @Override
+    public void addTask(Long folderId, Tasks task) {
+        if (foldersRepository.existsById(folderId)){
+            task.setStatus(0);
+            task.setFolder(foldersRepository.findById(folderId).orElse(null));
+            tasksRepository.save(task);
+        }
+    }
+
+    @Override
+    public void deleteCat(Long folderId, Long catId) {
+        if (foldersRepository.existsById(folderId)){
+            Folders folder = getFolder(folderId);
+            List<TaskCategories> categories =folder.getCategories();
+            if (categories==null){
+                categories = new ArrayList<>();
+            }
+            TaskCategories category = categoriesRepository.findById(catId).orElse(null);
+            categories.remove(category);
             folder.setCategories(categories);
             addFolder(folder);
         }

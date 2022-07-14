@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import taskmanager.trello.entities.Folders;
 import taskmanager.trello.entities.TaskCategories;
+import taskmanager.trello.entities.Tasks;
 import taskmanager.trello.repositories.FoldersRepository;
 import taskmanager.trello.services.TaskServices;
 
@@ -31,6 +32,7 @@ public class HomeController {
                                   Model model){
         model.addAttribute("folder", taskServices.getFolder(folderId));
         model.addAttribute("categories", taskServices.getAllCategories());
+        model.addAttribute("tasks", taskServices.getTasksByFolderId(folderId));
         return "detailsFolder";
     }
 
@@ -38,6 +40,20 @@ public class HomeController {
     private String assignCategory(@RequestParam(name = "folderId") Long folderId,
                                   @RequestParam(name = "categoryId") Long categoryId){
         taskServices.assignCategory(folderId, categoryId);
+        return "redirect:/details/folders/"+folderId;
+    }
+
+    @PostMapping(value = "/newTask")
+    private String newTask(@RequestParam(name = "folderId") Long folderId,
+                           @ModelAttribute(name = "taskObj")Tasks task){
+        taskServices.addTask(folderId, task);
+        return "redirect:/details/folders/"+folderId;
+    }
+
+    @GetMapping(value = "/unAssignCat/{catId}/{folderId}")
+    private String unAssignCategory(@PathVariable(name = "catId") Long catId,
+                                    @RequestParam(name = "folderId") Long folderId){
+        taskServices.deleteCat(folderId, catId);
         return "redirect:/details/folders/"+folderId;
     }
 }

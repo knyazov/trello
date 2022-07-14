@@ -9,7 +9,12 @@
                 <div class="card w-100 mb-3">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${folder.name}"></h5>
-                        <a href="" class="btn btn-primary mx-2" th:each="c : ${folder.categories}" th:text="${c.name}"></a>
+
+                        <a class="btn btn-primary mx-2" th:each="c : ${folder.categories}" th:text="${c.name} + '  x'"
+                           th:href="@{'/unAssignCat/'} + ${c.id} + @{'/'} + ${folder.id}">
+
+                        </a>
+
                         <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#newFolder">
                             + Add Category
                         </button>
@@ -56,6 +61,77 @@
                     </div>
                 </div>
             </div>
+            <div class="col-sm-3">
+                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#newTask">
+                    + New Task
+                </button>
+
+                <div class="modal fade" id="newTask" data-bs-backdrop="static" data-bs-keyboard="false"
+                     tabindex="-1"
+                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form th:action="@{'/newTask'}" method="post">
+                                <input type="hidden" name="folderId" th:value="${folder.id}">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">ADD NEW TASK</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label>Title: </label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <input class="form-control" type="text" name="title" placeholder="title">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label>Description: </label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <textarea rows="10" class="form-control" name="description"
+                                                      placeholder="description"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button class="btn btn-primary">ADD</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span th:if="${tasks!=null}">
+                <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="col-1"> ID </th>
+                    <th class="col-7"> Task Name </th>
+                    <th class="col-2"> Status </th>
+                    <th class="col-2"> Details </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="task : ${tasks}">
+                    <td th:text="${task.id}"></td>
+                    <td th:text="${task.title}"></td>
+                    <td th:text="${task.status}"></td>
+                    <td><button class="btn btn-primary"> DETAILS </button></td>
+                </tr>
+                </tbody>
+            </table>
+            </span>
         </div>
     </div>
 </div>
